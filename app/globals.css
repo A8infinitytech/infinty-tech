@@ -1,0 +1,194 @@
+/* Global styles: Tailwind layers, animations, reduced-motion rules and dark-mode color overrides. */
+
+@import "tailwindcss";
+
+/* Dark mode toggle (.dark class se) ke liye */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom colors — Tailwind v4 mein --color- prefix zaroori hai */
+@theme {
+  --color-ink: #1a1a1a;
+  --color-ink-500: #6b7280;
+  --color-ink-700: #374151;
+
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #dfe2ff;
+  --color-brand-200: #c3c6ff;
+  --color-brand-600: #1018f8;
+  --color-brand-700: #0d14c4;
+
+  --color-surface: #ffffff;
+  --color-surface-border: #e5e7eb;
+}
+
+/* Base layer — @apply yahan ke andar */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-ink font-sans antialiased;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #1018f8;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes floaty {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes pulseDot {
+  50% {
+    opacity: 0.35;
+  }
+}
+.draw {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw 2.2s 0.4s ease forwards;
+}
+.floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+.pulse-dot {
+  animation: pulseDot 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .draw {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes load {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+.load-bar {
+  animation: load 1.2s ease-in-out infinite;
+}
+
+/* Dark mode: remap light surfaces; brand blue is lightened only for text on dark. */
+.dark body {
+  background: #080816;
+  color: #ececfa;
+}
+.dark .bg-white,
+.dark .bg-surface {
+  background-color: #101025;
+}
+.dark .bg-white\/90 {
+  background-color: rgba(8, 8, 22, 0.9);
+}
+.dark .to-white {
+  --tw-gradient-to: #080816;
+}
+.dark .from-brand-50\/60 {
+  --tw-gradient-from: rgba(16, 24, 248, 0.14);
+}
+.dark .bg-surface.py-24,
+.dark .bg-surface.py-20 {
+  background-color: #0b0b1d;
+}
+.dark .border-surface-border {
+  border-color: #25264a;
+}
+.dark .divide-surface-border > * {
+  border-color: #25264a;
+}
+.dark .text-ink,
+.dark .text-ink-700 {
+  color: #ececfa;
+}
+.dark .text-ink-500 {
+  color: #a9aac8;
+}
+.dark .bg-brand-50,
+.dark .bg-brand-50\/40,
+.dark .bg-brand-50\/50,
+.dark .bg-brand-50\/60 {
+  background-color: rgba(16, 24, 248, 0.16);
+}
+.dark .text-brand-600 {
+  color: #8d92ff;
+}
+.dark .text-brand-700 {
+  color: #a5a9ff;
+}
+.dark .text-brand-200 {
+  color: #6e73ff;
+}
+.dark .border-brand-200 {
+  border-color: #2b2f9e;
+}
+.dark .bg-ink {
+  background-color: #14143a;
+  border: 1px solid #25264a;
+}
+.dark .text-brand-200.text-xs,
+.dark .bg-ink .text-brand-200 {
+  color: #c3c6ff;
+}
+.dark :focus-visible {
+  outline-color: #8d92ff;
+}
+
+/* Theme switching driven only by the .dark class (set by the toggle button). */
+.logo-dark {
+  display: none;
+}
+.dark .logo-light {
+  display: none;
+}
+.dark .logo-dark {
+  display: block;
+}
+.theme-sun {
+  display: none;
+}
+.dark .theme-moon {
+  display: none;
+}
+.dark .theme-sun {
+  display: block;
+}
+.dark .hover\:bg-brand-50:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
