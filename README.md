@@ -1,6 +1,6 @@
 # Infinity Official Site
 
-Marketing website and CMS admin for Infinity Tech, built with Next.js 16, React 19, Tailwind CSS 4, TypeScript, Supabase, Groq, and Resend.
+Marketing website and CMS admin for Infinity Tech, built with Next.js 16, React 19, Tailwind CSS 4, TypeScript, Supabase, Groq, and Brevo.
 
 Repository: https://github.com/A8infinitytech/infinty-tech.git
 
@@ -11,7 +11,7 @@ Repository: https://github.com/A8infinitytech/infinty-tech.git
 - 30 normalized CMS entities with one shared CRUD API per entity
 - Server-rendered site content with cached Supabase reads
 - Chatbot powered by Groq
-- Contact and newsletter emails powered by Resend
+- Contact and newsletter emails powered by Brevo SMTP API
 - Local icon system (Lucide + React Icons); icons and images are kept in separate APIs
 
 ## Requirements
@@ -19,7 +19,7 @@ Repository: https://github.com/A8infinitytech/infinty-tech.git
 - Node.js 20.9 or later
 - npm
 - Supabase project
-- Optional: Groq API key for chatbot, Resend API key for email
+- Optional: Groq API key for chatbot, Brevo API key for email
 
 ## Quick start
 
@@ -51,7 +51,9 @@ Open:
 | `ADMIN_PASSWORD` | Yes | Password for `/admin/login` and HMAC session signing |
 | `GROQ_API_KEY` | Chatbot | Groq API key |
 | `GROQ_MODEL` | No | Defaults to `llama3-70b-8192` |
-| `RESEND_API_KEY` | Email | Contact and newsletter email delivery |
+| `BREVO_API_KEY` | Email | Brevo API key for contact and newsletter emails |
+| `BREVO_SENDER_EMAIL` | Email | Verified Brevo sender email address |
+| `BREVO_SENDER_NAME` | No | Defaults to `Infinity Tech` |
 | `CONTACT_EMAIL` | Email | Destination inbox for contact and subscribe forms |
 
 Do not put a `sb_publishable_...` key in `SUPABASE_SERVICE_ROLE_KEY`. Server-side admin writes require the secret key.
@@ -82,6 +84,16 @@ The migration:
 - Adds indexes used by ordering/filtering.
 
 If the Supabase CLI is available, you can also apply the migration through your normal CLI workflow, but the SQL Editor method above is the tested path for this project.
+
+## Brevo setup
+
+1. Create a Brevo account.
+2. Verify the sender email under **Senders & Domains**.
+3. Create an API key with email/SMTP sending access.
+4. Set `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`, and optionally `BREVO_SENDER_NAME` in `.env.local` or Vercel.
+5. Set `CONTACT_EMAIL` to the inbox that should receive enquiries and newsletter sign-ups.
+
+The helper in `lib/brevo.ts` calls `https://api.brevo.com/v3/smtp/email`. Contact and subscribe routes send two emails each: one to the admin inbox and one auto-reply to the visitor.
 
 ## Scripts
 
@@ -170,8 +182,8 @@ infinity-officall-site/
 │   │   │   ├── login/route.ts         # password check + signed cookie
 │   │   │   └── logout/route.ts        # clears admin cookie
 │   │   ├── chat/route.ts              # Groq chatbot endpoint
-│   │   ├── contact/route.ts           # Resend contact form endpoint
-│   │   ├── subscribe/route.ts         # Resend newsletter endpoint
+│   │   ├── contact/route.ts           # Brevo contact form endpoint
+│   │   ├── subscribe/route.ts         # Brevo newsletter endpoint
 │   │   └── cms/                       # 30 canonical CMS CRUD routes
 │   │       ├── about-blocks/route.ts
 │   │       ├── chatbot-config/route.ts
@@ -254,6 +266,7 @@ infinity-officall-site/
 │   │   ├── services.ts                # typed services loader
 │   │   └── view.ts                    # merges normalized CMS data into SiteContent
 │   ├── admin-auth.ts                  # ADMIN_PASSWORD + HMAC session cookie
+│   ├── brevo.ts                       # Brevo SMTP API email helper
 │   ├── data.ts                        # SiteContent type + local icon helpers
 │   ├── settings.ts                    # typed site settings loader
 │   ├── services.ts                    # services helper for pages/API
@@ -297,7 +310,7 @@ Every `.ts`/`.tsx` file starts with a `// <relative-path>` header so its locatio
 | `components/` | Reusable public UI blocks such as navbar, hero, cards, footer, chatbot, and animations. |
 | `components/admin/` | Admin-only forms and the generic entity editor. |
 | `lib/cms/` | The CMS brain: entity registry, CRUD factory, view merge, and typed loaders. |
-| `lib/` | Shared server/client logic: auth, Supabase clients, content cache, and site-content hook. |
+| `lib/` | Shared server/client logic: auth, Brevo email helper, Supabase clients, content cache, and site-content hook. |
 | `public/` | Files served directly by URL, for example `/logo.png`. |
 | `supabase/migrations/` | Database schema and one-time data backfill. Apply this in Supabase SQL Editor. |
 | `scripts/` | Small local helper scripts; no secrets are stored in them. |
@@ -442,7 +455,7 @@ git add scripts/set-supabase-admin-key.ps1
 
 Deploy to Vercel with the repository root as the project root. The build command comes from `package.json` (`npm run build`).
 
-Add all environment variables from the table above in **Project Settings → Environment Variables**. Use the same Supabase project that received the migration. `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `GROQ_API_KEY`, and `RESEND_API_KEY` must be secret environment variables.
+Add all environment variables from the table above in **Project Settings → Environment Variables**. Use the same Supabase project that received the migration. `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, `GROQ_API_KEY`, and `BREVO_API_KEY` must be secret environment variables. Verify `BREVO_SENDER_EMAIL` in Brevo before going live.
 
 After deployment, visit `/admin/login` and confirm CMS edits revalidate the public pages.
 
@@ -466,7 +479,7 @@ Confirm the migration was applied with RLS, `SUPABASE_SERVICE_ROLE_KEY` is a sec
 
 ### Build passes locally but email/chat fails
 
-Check `RESEND_API_KEY`, `CONTACT_EMAIL`, `GROQ_API_KEY`, and `GROQ_MODEL` in `.env.local` or Vercel environment variables.
+Check `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`, `CONTACT_EMAIL`, `GROQ_API_KEY`, and `GROQ_MODEL` in `.env.local` or Vercel environment variables. If Brevo returns `401`, the API key is wrong; if it returns `400`, the sender email is not verified.
 
 ### Vercel fails with `EBADPLATFORM` for `@next/swc-win32-x64-msvc`
 
