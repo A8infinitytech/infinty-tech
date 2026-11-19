@@ -6,10 +6,35 @@ type SendEmailInput = {
   replyTo?: string;
 };
 
+export class BrevoError extends Error {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+export function brevoErrorMessage(error: unknown): string {
+  if (error instanceof BrevoError) {
+    if (error.status === 401) return "Email service authentication failed";
+    if (error.status === 400) return "Sender email is not verified in Brevo";
+    return "Email could not be sent";
+  }
+  if (error instanceof Error && error.message.includes("is missing")) {
+    return "Email service is not configured";
+  }
+  return "Email could not be sent";
+}
+
+function cleanEnvValue(value?: string): string | undefined {
+  return value?.trim().replace(/^["']|["']$/g, "");
+}
+
 export async function sendBrevoEmail({ to, subject, html, replyTo }: SendEmailInput): Promise<void> {
-  const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.CONTACT_EMAIL;
-  const senderName = process.env.BREVO_SENDER_NAME || "Infinity Tech";
+  const apiKey = cleanEnvValue(process.env.BREVO_API_KEY);
+  const senderEmail = cleanEnvValue(process.env.BREVO_SENDER_EMAIL || process.env.CONTACT_EMAIL);
+  const senderName = cleanEnvValue(process.env.BREVO_SENDER_NAME) || "Infinity Tech";
 
   if (!apiKey) throw new Error("BREVO_API_KEY is missing");
   if (!senderEmail) throw new Error("BREVO_SENDER_EMAIL is missing");
@@ -36,6 +61,6 @@ export async function sendBrevoEmail({ to, subject, html, replyTo }: SendEmailIn
 
   if (!response.ok) {
     const detail = await response.text();
-    throw new Error(`Brevo email failed (${response.status}): ${detail}`);
+    throw new BrevoError(response.status, `Brevo email failed (${response.status}): ${detail}`);
   }
 }
