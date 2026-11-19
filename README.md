@@ -467,3 +467,7 @@ Confirm the migration was applied with RLS, `SUPABASE_SERVICE_ROLE_KEY` is a sec
 ### Build passes locally but email/chat fails
 
 Check `RESEND_API_KEY`, `CONTACT_EMAIL`, `GROQ_API_KEY`, and `GROQ_MODEL` in `.env.local` or Vercel environment variables.
+
+### Vercel fails with `EBADPLATFORM` for `@next/swc-win32-x64-msvc`
+
+Never add a platform-specific `@next/swc-*` package to `package.json`. Next.js installs the correct native binary automatically for the build machine. Remove the Windows-only entry from both `package.json` and `package-lock.json`, commit both files, and rebuild.
