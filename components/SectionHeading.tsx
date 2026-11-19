@@ -1,3 +1,4 @@
+// components/SectionHeading.tsx
 // Reusable section title with eyebrow label and description.
 export default function SectionHeading({
   eyebrow,

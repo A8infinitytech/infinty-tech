@@ -1,3 +1,4 @@
+// app/api/subscribe/route.ts
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 

@@ -1,23 +1,23 @@
+// components/Footer.tsx
 "use client";
 
 // Site footer: logo, slogan, social icons, page links, email and subscribe form.
 import { useEffect, useState } from "react";
-import Logo from "./Logo";
 import Link from "next/link";
 import SocialLinks from "./SocialLinks";
-import { Mail, Phone, Loader2 } from "lucide-react";
-import { nav, EMAIL, PHONE, PHONE_HREF, SLOGAN } from "@/lib/data";
+import { useSiteContent } from "@/lib/useSiteContent";
+import { iconElement } from "@/lib/data";
+import Logo from "./Logo";
+
 
 export default function Footer() {
   const [year, setYear] = useState<number | null>(null);
-  
-  // Subscribe states
-  const [subEmail, setSubEmail] = useState("");
-  const [subStatus, setSubStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-
   useEffect(() => {
     setYear(new Date().getFullYear());
   }, []);
+  const [subEmail, setSubEmail] = useState("");
+  const [subStatus, setSubStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const content = useSiteContent();
 
   async function handleSubscribe(e: React.FormEvent) {
     e.preventDefault();
@@ -46,7 +46,7 @@ export default function Footer() {
         {/* 1. Logo & Socials */}
         <div className="md:col-span-1">
           <Logo className="h-12" />
-          <p className="mt-4 max-w-xs text-sm text-ink-500">{SLOGAN}</p>
+          <p className="mt-4 max-w-xs text-sm text-ink-500">{content.constants.slogan}</p>
           <div className="mt-5">
             <SocialLinks />
           </div>
@@ -54,9 +54,9 @@ export default function Footer() {
         
         {/* 2. Pages */}
         <nav aria-label="Footer" className="md:pl-4">
-          <h3 className="mb-4 text-sm font-semibold">Pages</h3>
+          <h3 className="mb-4 text-sm font-semibold">{content.footer.headings.pages}</h3>
           <ul className="space-y-2 text-sm text-ink-500">
-            {nav.map((n) => (
+            {content.navigation.map((n) => (
               <li key={n.href}>
                 <Link href={n.href} className="hover:text-brand-600 transition-colors">
                   {n.label}
@@ -68,32 +68,32 @@ export default function Footer() {
         
         {/* 3. Contact */}
         <div className="md:pl-4">
-          <h3 className="mb-4 text-sm font-semibold">Contact</h3>
+          <h3 className="mb-4 text-sm font-semibold">{content.footer.headings.contact}</h3>
           <a
-            href={`mailto:${EMAIL}`}
+            href={`mailto:${content.constants.email}`}
             className="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-brand-600 transition-colors"
           >
-            <Mail className="h-4 w-4" aria-hidden />
-            {EMAIL}
+            {iconElement("Mail", { className: "h-4 w-4", "aria-hidden": true })}
+            {content.constants.email}
           </a>
           <a
-            href={PHONE_HREF}
+            href={content.constants.phoneHref}
             className="mt-3 flex items-center gap-2 text-sm text-ink-500 hover:text-brand-600 transition-colors"
           >
-            <Phone className="h-4 w-4" aria-hidden />
-            {PHONE}
+            {iconElement("Phone", { className: "h-4 w-4", "aria-hidden": true })}
+            {content.constants.phone}
           </a>
         </div>
 
         {/* 4. Newsletter */}
         <div>
-          <h3 className="mb-4 text-sm font-semibold">Newsletter</h3>
+          <h3 className="mb-4 text-sm font-semibold">{content.footer.headings.newsletter}</h3>
           <p className="mb-3 text-sm text-ink-500">
-            Subscribe for updates and AI insights.
+            {content.footer.newsletterDescription}
           </p>
           {subStatus === "sent" ? (
             <p className="text-sm font-medium text-green-600">
-              ✓ Subscribed successfully!
+              {content.footer.success}
             </p>
           ) : (
             <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
@@ -102,7 +102,7 @@ export default function Footer() {
                 value={subEmail}
                 onChange={(e) => setSubEmail(e.target.value)}
                 required
-                placeholder="Your email"
+                placeholder={content.footer.emailPlaceholder}
                 className="w-full rounded-lg border border-surface-border bg-white px-3 py-2 text-sm focus:border-brand-600 focus:outline-none"
               />
               <button
@@ -111,13 +111,13 @@ export default function Footer() {
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
               >
                 {subStatus === "sending" ? (
-                  <>Wait <Loader2 className="h-4 w-4 animate-spin" /></>
+                  <>{content.footer.waitLabel} {iconElement("Loader2", { className: "h-4 w-4 animate-spin", "aria-hidden": true })}</>
                 ) : (
-                  "Subscribe"
+                  content.footer.subscribeLabel
                 )}
               </button>
               {subStatus === "error" && (
-                <p className="text-xs text-red-500">Something went wrong. Try again.</p>
+                <p className="text-xs text-red-500">{content.footer.error}</p>
               )}
             </form>
           )}
@@ -125,7 +125,7 @@ export default function Footer() {
       </div>
       
       <div className="border-t border-surface-border py-5 text-center text-xs text-ink-500">
-        © {year ? `${year} ` : ""}Infinity Tech. All rights reserved.
+        {content.footer.copyrightSymbol} {year ? `${year} ` : ""}{content.footer.copyrightText}
       </div>
     </footer>
   );

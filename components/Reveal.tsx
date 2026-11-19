@@ -1,3 +1,4 @@
+// components/Reveal.tsx
 "use client";
 // Fades content in when it scrolls into view.
 import { useEffect, useRef } from "react";

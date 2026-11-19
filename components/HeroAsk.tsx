@@ -1,8 +1,12 @@
+// components/HeroAsk.tsx
 "use client";
 // Hero 'Ask AI' box: sends the question to the chatbot via a browser event.
 import { useState } from "react";
-import { Sparkles, ArrowUp } from "lucide-react";
+import { useSiteContent } from "@/lib/useSiteContent";
+import { iconElement } from "@/lib/data";
+
 export default function HeroAsk() {
+  const content = useSiteContent();
   const [v, setV] = useState("");
   const ask = (t: string) => {
     if (t.trim()) {
@@ -19,27 +23,27 @@ export default function HeroAsk() {
         }}
         className="flex items-center gap-2 rounded-full border border-surface-border bg-white p-1.5 pl-5 shadow-card focus-within:border-brand-600"
       >
-        <Sparkles className="h-4 w-4 shrink-0 text-brand-600" aria-hidden />
+        {iconElement("Sparkles", { className: "h-4 w-4 shrink-0 text-brand-600", "aria-hidden": true })}
         <label htmlFor="hero-ask" className="sr-only">
-          Ask Infinity AI
+          {content.heroAsk.label}
         </label>
         <input
           id="hero-ask"
           value={v}
           maxLength={200}
           onChange={(e) => setV(e.target.value)}
-          placeholder="Ask our AI how we can help your business…"
+          placeholder={content.heroAsk.placeholder}
           className="min-w-0 flex-1 bg-transparent text-sm focus:outline-none"
         />
         <button
-          aria-label="Ask"
+          aria-label={content.heroAsk.submitLabel}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-700"
         >
-          <ArrowUp className="h-4 w-4" />
+          {iconElement("ArrowUp", { className: "h-4 w-4" })}
         </button>
       </form>
       <div className="mt-3 flex flex-wrap gap-2">
-        {["What can you automate?", "How do we start?"].map((q) => (
+        {content.heroAsk.suggestions.map((q) => (
           <button
             key={q}
             onClick={() => ask(q)}

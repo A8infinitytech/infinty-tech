@@ -1,22 +1,36 @@
-// Dark call-to-action block shown near the bottom of pages.
+// components/CTASection.tsx
+"use client";
+
+// Bottom-of-page call to action.
+import { useSiteContent } from "@/lib/useSiteContent";
 import Button from "./Button";
-import { SLOGAN } from "@/lib/data";
+
 export default function CTASection() {
+  const content = useSiteContent();
   return (
-    <section className="min-h-[360px] px-4 py-20 sm:px-6">
-      <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl bg-ink px-8 py-16 text-center text-white sm:px-16">
-        <div aria-hidden className="pointer-events-none absolute" />
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[.2em] text-brand-200">
-          {SLOGAN}
-        </p>
-        <h2 className="font-display text-3xl font-bold sm:text-4xl">
-          Ready to build something intelligent?
+    <section className="relative overflow-hidden bg-blue-700 py-20 text-white">
+      {/* soft blue glow accents */}
+      <div className="pointer-events-none absolute inset-0 opacity-25">
+        <div className="absolute -left-20 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-blue-400 blur-3xl" />
+        <div className="absolute -right-20 top-1/3 h-80 w-80 rounded-full bg-sky-300 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
+          {content.cta.heading}
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-brand-200">
-          Tell us about your project and we will get back to you by email.
+        <p className="mx-auto mt-4 max-w-xl text-blue-100">
+          {content.cta.description} {content.constants.slogan}
         </p>
-        <div className="mt-8">
-          <Button href="/contact">Let&apos;s Discuss Your Project</Button>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button
+            href="/contact"
+            variant="secondary"
+            className="!bg-white !text-blue-700 hover:!bg-blue-50"
+            arrow={false}
+          >
+            {content.cta.button}
+          </Button>
         </div>
       </div>
     </section>

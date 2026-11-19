@@ -1,6 +1,7 @@
+// components/Button.tsx
 // Reusable link-styled button (primary and secondary variants).
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { iconElement } from "@/lib/data";
 export default function Button({
   href,
   children,
@@ -23,12 +24,11 @@ export default function Button({
   return (
     <Link href={href} className={`${base} ${v} ${className}`}>
       {children}
-      {arrow && (
-        <ArrowRight
-          className="h-4 w-4 transition-transform group-hover:translate-x-1"
-          aria-hidden
-        />
-      )}
+      {arrow &&
+        iconElement("ArrowRight", {
+          className: "h-4 w-4 transition-transform group-hover:translate-x-1",
+          "aria-hidden": true,
+          })}
     </Link>
   );
 }

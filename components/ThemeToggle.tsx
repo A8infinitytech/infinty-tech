@@ -1,7 +1,10 @@
+// components/ThemeToggle.tsx
 "use client";
 // Dark/light mode button; saves the choice in localStorage.
-import { Moon, Sun } from "lucide-react";
+import { useSiteContent } from "@/lib/useSiteContent";
+import { iconElement } from "@/lib/data";
 export default function ThemeToggle() {
+  const content = useSiteContent();
   function toggle() {
     const d = document.documentElement.classList.toggle("dark");
     try {
@@ -11,11 +14,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      aria-label="Toggle dark and light mode"
+      aria-label={content.themeToggle.ariaLabel}
       className="flex h-10 w-10 items-center justify-center rounded-full border border-surface-border bg-white text-ink-700 transition hover:border-brand-600 hover:text-brand-600"
     >
-      <Moon className="theme-moon h-4 w-4" aria-hidden />
-      <Sun className="theme-sun h-4 w-4" aria-hidden />
+        {iconElement("Moon", { className: "theme-moon h-4 w-4", "aria-hidden": true })}
+        {iconElement("Sun", { className: "theme-sun h-4 w-4", "aria-hidden": true })}
     </button>
   );
 }

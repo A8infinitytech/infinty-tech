@@ -1,146 +1,332 @@
-// Main site content: email, slogan, navigation, services, process, FAQ.
-import { 
-  Workflow, 
-  BrainCircuit, 
-  Globe, 
-  ShoppingCart, 
-  AppWindow , 
-  Bot, 
+// lib/data.ts
+import { createElement } from "react";
+import type { Metadata } from "next";
+import type { LucideIcon } from "lucide-react";
+import type { IconType } from "react-icons";
+import {
+  Activity,
+  AlertTriangle,
+  AppWindow,
+  ArrowRight,
+  ArrowUp,
+  Bot,
+  BrainCircuit,
+  Braces,
+  Check,
+  CheckCircle2,
+  Cloud,
   Code,
+  Component,
   Database,
+  Eye,
+  FolderKanban,
+  GitBranch,
+  Globe,
+  HelpCircle,
+  Layers,
   Layout,
-  Smartphone
-} from "lucide-react"; 
+  Lightbulb,
+  Loader2,
+  Mail,
+  Menu,
+  MessageCircle,
+  MessageSquare,
+  MessageSquareQuote,
+  MessagesSquare,
+  Moon,
+  Phone,
+  Plus,
+  Quote,
+  Rocket,
+  Send,
+  Server,
+  ShieldCheck,
+  ShoppingCart,
+  Smartphone,
+  Sparkles,
+  Sun,
+  Target,
+  Terminal,
+  Wind,
+  Workflow,
+  Wrench,
+  X,
+} from "lucide-react";
+import { FaFacebookF, FaGithub, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 
-export const SLOGAN = "Build Smarter. Move Faster.";
-export const EMAIL = "a8infinitytech@gmail.com";
-export const PHONE = "+92 318 1935228";
-export const PHONE_HREF = "tel:+923181935228";
-export const nav = [
-  { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
-  { href: "/projects", label: "Projects" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
-export const services = [
-  {
-    icon: Workflow,
-    title: "AI Automation",
-    desc: "Automate repetitive business tasks, streamline workflows, and boost productivity with intelligent automation.",
-  },
-  {
-    icon: BrainCircuit,
-    title: "AI Development",
-    desc: "Build intelligent AI solutions, custom AI systems, and powerful applications tailored to business needs.",
-  },
-  {
-    icon: Globe,
-    title: "Web Development",
-    desc: "Create modern, responsive, and professional websites that strengthen your online presence.",
-  },
-  {
-    icon: ShoppingCart,
-    title: "E-commerce Development",
-    desc: "Launch powerful online stores with product management, shopping carts, and seamless shopping experiences.",
-  },
-  {
-    icon: AppWindow,
-    title: "AI-Powered Web Apps",
-    desc: "Develop smart web applications combining modern technologies with advanced AI capabilities.",
-  },
-  {
-    icon: Bot,
-    title: "AI Chatbots",
-    desc: "Build intelligent AI chatbots that answer customer questions and automate customer support.",
-  },
-  {
-    icon: Code,
-    title: "Custom Software Development",
-    desc: "Develop custom software solutions designed to solve business challenges and improve efficiency.",
-  },
-  {
-    icon: Database,
-    title: "API Integration",
-    desc: "Connect APIs, third-party services, and business tools to create seamless digital workflows.",
-  },
-  {
-    icon: Layout,
-    title: "Business Websites",
-    desc: "Design and develop professional business websites that showcase your brand and attract customers.",
-  },
-  {
-    icon: Smartphone,
-    title: "Responsive Web Design",
-    desc: "Create beautiful, mobile-friendly interfaces that deliver exceptional experiences across all devices.",
-  },
-];
-export const process = [
-  { t: "Discover", d: "We learn your business, goals, and constraints before proposing anything." },
-  {
-    t: "Design",
-    d: "We define scope, architecture, and the user experience, and agree on it with you.",
-  },
-  { t: "Build", d: "We develop in clear iterations so you can see and react to real progress." },
-  {
-    t: "Launch & Improve",
-    d: "We deploy, test in the real world, and keep refining the solution.",
-  },
-];
-export const why = [
-  { t: "Business-first thinking", d: "Technology choices follow your goals, not trends." },
-  { t: "Engineering discipline", d: "Typed, tested, maintainable code you can build on." },
-  { t: "Clear communication", d: "Plain-language updates and honest scoping." },
-  { t: "AI that is practical", d: "Solutions designed to be useful, reliable, and controllable." },
-];
-// Edit to match your real stack.
-export const stack = [
-  "Next.js",
-  "React",
-  "TypeScript",
-  "Tailwind CSS",
-  "Node.js",
-  "Python",
-  "FastAPI",
-  "OpenAI / LLM APIs",
-  "AI Agents",
-  "AI Automation",
-  "PostgreSQL",
-  "Neon Database",
-  "REST APIs",
-  "Git & GitHub",
-];
-export const faqs = [
-  {
-    q: "What services does Infinity Tech provide?",
-    a: "We provide AI automation, AI development, web development, e-commerce development, AI chatbots, and AI-powered web applications.",
-  },
-  {
-    q: "How can I start a project with Infinity Tech?",
-    a: "Simply contact us through our website or social media. Share your idea, business requirements, and goals, and we will discuss the best solution for your project.",
-  },
-  {
-    q: "Can Infinity Tech build custom solutions for my business?",
-    a: "Absolutely. We develop customized websites, AI solutions, automation workflows, and software tailored to your business needs.",
-  },
-  {
-    q: "Do you work with startups and small businesses?",
-    a: "Yes. We help startups, entrepreneurs, and small businesses build digital solutions that support their growth and improve efficiency.",
-  },
-  {
-    q: "Can you integrate AI into my existing website or business?",
-    a: "Yes. We can integrate AI features, intelligent chatbots, APIs, and automation into existing websites and business workflows.",
-  },
-  {
-    q: "Will my website be mobile-friendly?",
-    a: "Yes. We build responsive websites that provide smooth and consistent experiences across mobile phones, tablets, and desktops.",
-  },
-  {
-    q: "How long does a project take?",
-    a: "Project timelines depend on complexity, features, and requirements. We discuss the estimated timeline before starting development.",
-  },
-  {
-    q: "How can I get a quote for my project?",
-    a: "Contact us with your project details and requirements. We will review your idea and discuss the estimated cost and development approach.",
-  },
-];
+export type AppIcon = LucideIcon | IconType;
+
+export const iconMap: Record<string, AppIcon> = {
+  Activity,
+  AlertTriangle,
+  AppWindow,
+  ArrowRight,
+  ArrowUp,
+  Bot,
+  BrainCircuit,
+  Braces,
+  Check,
+  CheckCircle2,
+  Cloud,
+  Code,
+  Component,
+  Database,
+  Eye,
+  FolderKanban,
+  GitBranch,
+  Globe,
+  HelpCircle,
+  Layers,
+  Layout,
+  Lightbulb,
+  Loader2,
+  Mail,
+  Menu,
+  MessageCircle,
+  MessageSquare,
+  MessageSquareQuote,
+  MessagesSquare,
+  Moon,
+  Phone,
+  Plus,
+  Quote,
+  Rocket,
+  Send,
+  Server,
+  ShieldCheck,
+  ShoppingCart,
+  Smartphone,
+  Sparkles,
+  Sun,
+  Target,
+  Terminal,
+  Wind,
+  Workflow,
+  Wrench,
+  X,
+  FaFacebookF,
+  FaGithub,
+  FaInstagram,
+  FaLinkedinIn,
+};
+
+export const iconsData = Object.keys(iconMap);
+
+export function getIcon(name: string): AppIcon {
+  return iconMap[name] || HelpCircle;
+}
+
+export function iconElement(
+  name: string,
+  props: { className?: string; "aria-hidden"?: boolean | "true" | "false" } = {}
+) {
+  return createElement(getIcon(name), props);
+}
+
+/* ─────────────────────────── Shared Types ─────────────────────────── */
+/* ─────────────────────────── Static Error / Loading / 404 ─────────────────────────── */
+
+export type ErrorContent = {
+  heading: string;
+  description: string;
+  tryAgain: string;
+  goHome: string;
+};
+
+export type LoadingContent = {
+  statusLabel: string;
+  srOnly: string;
+};
+
+export type NotFoundContent = {
+  code: string;
+  heading: string;
+  description: string;
+  button: string;
+};
+
+export type ConstantsContent = {
+  slogan: string;
+  email: string;
+  phone: string;
+  phoneHref: string;
+};
+
+export type NavItem = { href: string; label: string };
+export type TextPair = { t: string; d: string };
+export type IconTextPair = { i: string; t: string; d: string };
+export type ToolItem = { name: string; icon: string; desc: string };
+export type SocialItem = { name: string; href: string; icon: string };
+export type Testimonial = { quote: string; name: string; role: string };
+export type FaqItem = { q: string; a: string };
+export type ProjectItem = { title: string; category: string; description: string };
+
+export type ChatbotContent = {
+  title: string;
+  subtitle: string;
+  ariaLabel: string;
+  closeLabel: string;
+  openLabel: string;
+  welcome: string;
+  welcomeWithSlogan: string;
+  suggestions: string[];
+  thinking: string;
+  messageLabel: string;
+  messagePlaceholder: string;
+  sendLabel: string;
+  fallbackDefaults: { email: string; phone: string };
+  fallbackTemplates: Record<string, string>;
+};
+
+export type DashboardContent = {
+  loadingLabel: string;
+  consoleLabel: string;
+  servicesLabel: string;
+  tablistLabel: string;
+  quoteLabel: string;
+  performanceLabel: string;
+  liveLabel: string;
+  autoLabel: string;
+  processLabel: string;
+  completedLabel: string;
+  inProgressLabel: string;
+  defaultSteps: string[];
+  workflowSteps: Record<string, string[]>;
+  skeletonRows: number[];
+};
+
+export type ServicesPreviewContent = {
+  previewLimit: number;
+  button: string;
+};
+
+export type ServiceCardContent = {
+  quoteLabel: string;
+  fallbackIconName: string;
+  contactBaseUrl: string;
+};
+
+export type SiteContent = {
+   
+  constants: ConstantsContent;
+  site: {
+    brand: string;
+    slogan: string;
+    email: string;
+    phone: string;
+    phoneHref: string;
+    skipLink: string;
+    metadata: Metadata;
+  };
+  images: {
+    logo: { src: string; darkSrc: string; alt: string };
+    favicon: string;
+  };
+  iconMeta: {
+    fallbackName: string;
+    whatsapp: { viewBox: string; path: string };
+  };
+  navigation: NavItem[];
+  scrollUtils: { backToTopLabel: string };
+  themeToggle: { ariaLabel: string };
+  navbar: {
+    ariaLabel: string;
+    homeAriaLabel: string;
+    ctaLabel: string;
+    openMenuLabel: string;
+    closeMenuLabel: string;
+  };
+  hero: {
+    headingLead: string;
+    headingAccent: string;
+    description: string;
+    primaryCta: string;
+    secondaryCta: string;
+  };
+  heroAsk: {
+    label: string;
+    placeholder: string;
+    submitLabel: string;
+    suggestions: string[];
+  };
+  process: TextPair[];
+  why: TextPair[];
+  stack: string[];
+  home: {
+    hero: {
+      headingLead: string;
+      headingAccent: string;
+      description: string;
+      primaryCta: string;
+      secondaryCta: string;
+    };
+    sections: Record<string, Record<string, string>>;
+    processNumberPrefix: string;
+  };
+  about: {
+    metadata: Metadata;
+    intro: { eyebrow: string; desc: string };
+    blocks: IconTextPair[];
+    values: IconTextPair[];
+    sections: Record<string, Record<string, string>>;
+    loadingCapabilities: string;
+    noServices: string;
+    processNumberPrefix: string;
+  };
+  projects: {
+    metadata: Metadata;
+    heading: { eyebrow: string; title: string };
+    emptyState: { heading: string; description: string };
+    projects: ProjectItem[];
+  };
+  contact: {
+    metadata: Metadata;
+    loadingContactInfo: string;
+    loadingForm: string;
+    heading: { eyebrow: string; title: string; desc: string };
+    emailLabel: string;
+    whatsappLabel: string;
+    socialHeading: string;
+    fallbacks: { phone: string; email: string };
+    whatsappBaseUrl: string;
+  };
+  contactForm: {
+    labels: { name: string; email: string; service: string; details: string };
+    otherOption: string;
+    sending: string;
+    sendMessage: string;
+    sent: string;
+    error: string;
+  };
+  cta: { heading: string; description: string; button: string };
+  servicesPage: {
+    heading: { eyebrow: string; title: string; desc: string };
+    loading: string;
+    noServices: string;
+  };
+  servicesPreview: ServicesPreviewContent;
+  serviceCard: ServiceCardContent;
+  dashboard: DashboardContent;
+  tools: ToolItem[];
+  socials: SocialItem[];
+  socialLinks: { ariaLabel: string; comingSoonSuffix: string };
+  testimonials: Testimonial[];
+  testimonialsPlaceholder: { heading: string; description: string };
+  faq: FaqItem[];
+  footer: {
+    headings: { pages: string; contact: string; newsletter: string };
+    newsletterDescription: string;
+    emailPlaceholder: string;
+    waitLabel: string;
+    subscribeLabel: string;
+    success: string;
+    error: string;
+    copyrightSymbol: string;
+    copyrightText: string;
+  };
+  chatbot: ChatbotContent;
+  loading: { statusLabel: string; srOnly: string };
+  error: { heading: string; description: string; tryAgain: string; goHome: string };
+  notFound: { code: string; heading: string; description: string; button: string };
+  
+};

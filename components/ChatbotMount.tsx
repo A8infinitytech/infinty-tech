@@ -1,3 +1,4 @@
+// components/ChatbotMount.tsx
 "use client";
 // Loads the chat widget after the page has finished loading, outside the initial bundle.
 import dynamic from "next/dynamic";

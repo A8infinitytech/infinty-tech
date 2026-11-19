@@ -1,20 +1,8 @@
+// app/api/chat/route.ts
 // Server route for the chatbot: sends the conversation to Groq using the secret GROQ_API_KEY.
 import { NextResponse } from "next/server";
-import { services, EMAIL, PHONE, SLOGAN } from "@/lib/data";
-
-
-// Advanced System Prompt: Strict rules + Multi-language support
-const SYSTEM = `You are the official AI Assistant for "Infinity Tech". 
-Company Slogan: "${SLOGAN}".
-Our Services: ${services.map((s) => `- ${s.title}: ${s.desc}`).join("\n")}.
-Contact Info: Email: ${EMAIL}, Phone: ${PHONE}, or use the Contact page form.
-
-STRICT RULES:
-1. LANGUAGE: ALWAYS reply in the exact same language and script the user used. (e.g., if they ask in Roman Urdu, reply in Roman Urdu. If they ask in English, reply in English).
-2. NO HALLUCINATION: Use ONLY the facts provided above. NEVER invent prices, clients, projects, statistics, addresses, or phone numbers. 
-3. UNKNOWN INFO: If you don't know the answer, politely say: "I don't have that information right now. Please contact us at ${EMAIL} or ${PHONE} for details."
-4. FORMAT: Keep answers friendly, professional, and concise (under 80 words). Use plain text ONLY. No markdown, no bold, no asterisks, no headings. For lists, put each item on a new line starting with "- ".
-5. SCOPE: Only answer questions related to Infinity Tech, our services, or how to contact us. If asked unrelated questions (like coding, general knowledge, or math), politely decline and steer the conversation back to Infinity Tech.`;
+import { getServices } from "@/lib/services";
+import { getSettings } from "@/lib/settings";
 
 export async function POST(req: Request) {
   const key = process.env.GROQ_API_KEY;
@@ -52,6 +40,33 @@ export async function POST(req: Request) {
   }
 
   try {
+    // 1. Database se live Services aur Settings fetch karein
+    const servicesData = await getServices();
+    const settingsData = await getSettings();
+
+    // 2. Fallback values set karein agar DB khali ho
+    const email = settingsData?.email || "a8infinitytech@gmail.com";
+    const phone = settingsData?.phone || "+92 318 1935228";
+    const slogan = settingsData?.slogan || "Build Smarter. Move Faster.";
+
+    // 3. Dynamic System Prompt banayein
+    const servicesText = servicesData.map((s) => `- ${s.title}: ${s.description ?? ""}`).join("\n");
+
+    const SYSTEM = `You are the official AI Assistant for "Infinity Tech". 
+Company Slogan: "${slogan}".
+Our Services: 
+${servicesText}
+Contact Info: Email: ${email}, Phone: ${phone}, or use the Contact page form.
+
+STRICT RULES:
+1. LANGUAGE: ALWAYS reply in the exact same language and script the user used. (e.g., if they ask in Roman Urdu, reply in Roman Urdu. If they ask in English, reply in English).
+2. NO HALLUCINATION: Use ONLY the facts provided above. NEVER invent prices, clients, projects, statistics, addresses, or phone numbers. 
+3. UNKNOWN INFO: If you don't know the answer, politely say: "I don't have that information right now. Please contact us at ${email} or ${phone} for details."
+4. FORMAT & SERVICES: When the user asks about services (e.g., "Services" or "What do you do?"), DO NOT just output a raw list of titles. Always start with a friendly introductory sentence like "Here are the services we offer at Infinity Tech:" or "We provide the following solutions:". Then list the service names clearly.
+5. Keep answers friendly, professional, and concise. Use plain text ONLY. Do not use asterisks. For lists, put each item on a new line. You can use a hyphen "-" or bullet points for the list items.
+6. SCOPE: Only answer questions related to Infinity Tech, our services, or how to contact us. If asked unrelated questions, politely decline and steer the conversation back to Infinity Tech.`;
+
+    // 4. Groq API call
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -59,11 +74,11 @@ export async function POST(req: Request) {
         Authorization: `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: process.env.GROQ_MODEL || "llama3-70b-8192", // 'llama3-70b-8192' is highly reliable and smart
-        temperature: 0.3, // Lower temperature makes it more factual and strict
+        model: process.env.GROQ_MODEL || "llama3-70b-8192", 
+        temperature: 0.3, 
         max_tokens: 800,
         top_p: 0.9,
-        stream: false, // Set to true if you want streaming text later
+        stream: false, 
         messages: [{ role: "system", content: SYSTEM }, ...messages],
       }),
     });

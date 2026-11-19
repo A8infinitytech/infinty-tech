@@ -1,22 +1,25 @@
+// components/Testimonials.tsx
+"use client";
 // Testimonials cards, or a placeholder when no real testimonials exist.
-import { Quote, MessageSquareQuote } from "lucide-react";
-import { testimonials } from "@/lib/extra";
+import { useSiteContent } from "@/lib/useSiteContent";
+import { iconElement } from "@/lib/data";
 export default function Testimonials() {
-  if (!testimonials.length)
+  const content = useSiteContent();
+  if (!content.testimonials.length)
     return (
       <div className="mt-12 rounded-2xl border border-dashed border-brand-200 bg-brand-50/40 p-12 text-center">
-        <MessageSquareQuote className="mx-auto h-9 w-9 text-brand-600" aria-hidden />
-        <p className="mt-3 font-display text-lg font-semibold">Client stories coming soon</p>
+        {iconElement("MessageSquareQuote", { className: "mx-auto h-9 w-9 text-brand-600", "aria-hidden": true })}
+        <p className="mt-3 font-display text-lg font-semibold">{content.testimonialsPlaceholder.heading}</p>
         <p className="mx-auto mt-1 max-w-md text-sm text-ink-500">
-          Genuine client feedback will be featured here.
+          {content.testimonialsPlaceholder.description}
         </p>
       </div>
     );
   return (
     <div className="mt-12 grid gap-6 md:grid-cols-3">
-      {testimonials.map((t) => (
+      {content.testimonials.map((t) => (
         <figure key={t.name} className="rounded-2xl border border-surface-border bg-white p-7">
-          <Quote className="h-6 w-6 text-brand-600" aria-hidden />
+          {iconElement("Quote", { className: "h-6 w-6 text-brand-600", "aria-hidden": true })}
           <blockquote className="mt-4 leading-relaxed text-ink-700">{t.quote}</blockquote>
           <figcaption className="mt-5 text-sm">
             <strong>{t.name}</strong>

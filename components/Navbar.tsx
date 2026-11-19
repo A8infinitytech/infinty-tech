@@ -1,10 +1,11 @@
+// components/Navbar.tsx
 "use client";
 // Sticky top navigation with mobile menu and theme toggle.
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { nav } from "@/lib/data";
+import { useSiteContent } from "@/lib/useSiteContent";
+import { iconElement } from "@/lib/data";
 import Button from "./Button";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
@@ -12,18 +13,19 @@ import ThemeToggle from "./ThemeToggle";
 export default function Navbar() {
   const path = usePathname();
   const [open, setOpen] = useState(false);
+  const content = useSiteContent();
 
   return (
     <header className="sticky top-0 z-50 border-b border-surface-border bg-white/90 backdrop-blur">
       <nav
-        aria-label="Main"
+        aria-label={content.navbar.ariaLabel}
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
       >
-        <Link href="/" aria-label="Infinity Tech home">
+        <Link href="/" aria-label={content.navbar.homeAriaLabel}>
           <Logo className="h-10" />
         </Link>
         <ul className="hidden items-center gap-8 md:flex">
-          {nav.map((n) => (
+          {content.navigation.map((n) => (
             <li key={n.href}>
               <Link
                 href={n.href}
@@ -38,18 +40,18 @@ export default function Navbar() {
         <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
           <Button href="/contact" arrow={false} className="!py-2.5">
-            Get in touch
+            {content.navbar.ctaLabel}
           </Button>
         </div>
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <button
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? content.navbar.closeMenuLabel : content.navbar.openMenuLabel}
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen(!open)}
           >
-            {open ? <X /> : <Menu />}
+            {iconElement(open ? "X" : "Menu")}
           </button>
         </div>
       </nav>
@@ -58,7 +60,7 @@ export default function Navbar() {
           id="mobile-menu"
           className="border-t border-surface-border bg-white px-4 py-4 md:hidden"
         >
-          {nav.map((n) => (
+          {content.navigation.map((n) => (
             <li key={n.href}>
               <Link
                 href={n.href}
