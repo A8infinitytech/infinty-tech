@@ -49,6 +49,7 @@ async function ContactContent({ content }: { content: SiteContent }) {
       {/* Left Side: Info */}
       <div className="lg:col-span-2 flex flex-col justify-center">
         <SectionHeading
+          as="h1"
           eyebrow={contact.heading.eyebrow}
           title={contact.heading.title}
           desc={contact.heading.desc}
@@ -61,7 +62,7 @@ async function ContactContent({ content }: { content: SiteContent }) {
               {iconElement("Mail", { className: "h-6 w-6", "aria-hidden": true })}
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">{contact.emailLabel}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">{contact.emailLabel}</p>
               <p className="mt-1 text-sm font-semibold text-ink-900">{emailAddress}</p>
             </div>
           </a>
@@ -74,7 +75,7 @@ async function ContactContent({ content }: { content: SiteContent }) {
               </svg>
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">{contact.whatsappLabel}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">{contact.whatsappLabel}</p>
               <p className="mt-1 text-sm font-semibold text-ink-900">{phoneNumber}</p>
             </div>
           </a>

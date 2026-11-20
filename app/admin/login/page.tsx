@@ -41,7 +41,7 @@ async function AdminLoginContent() {
           </div>
           <div>
             <p className="font-display text-base font-semibold">Infinity Tech</p>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">Admin console</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/85">Admin console</p>
           </div>
         </div>
 
@@ -49,29 +49,29 @@ async function AdminLoginContent() {
           <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
             Your site, fully under control.
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-white/75">
+          <p className="mt-4 text-sm leading-relaxed text-white/85">
             One secure workspace for every word, service and setting on your public site.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
               <Database className="h-5 w-5" />
               <p className="mt-3 text-sm font-semibold">Content library</p>
-              <p className="mt-1 text-xs text-white/65">Edit structured sections with ease.</p>
+              <p className="mt-1 text-xs text-white/85">Edit structured sections with ease.</p>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
               <Layers3 className="h-5 w-5" />
               <p className="mt-3 text-sm font-semibold">Service cards</p>
-              <p className="mt-1 text-xs text-white/65">Update titles, icons and descriptions.</p>
+              <p className="mt-1 text-xs text-white/85">Update titles, icons and descriptions.</p>
             </div>
             <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur sm:col-span-2">
               <Settings2 className="h-5 w-5" />
               <p className="mt-3 text-sm font-semibold">Instant publishing</p>
-              <p className="mt-1 text-xs text-white/65">Every save refreshes the public site right away.</p>
+              <p className="mt-1 text-xs text-white/85">Every save refreshes the public site right away.</p>
             </div>
           </div>
         </div>
 
-        <div className="relative flex items-center justify-between text-xs text-white/60">
+        <div className="relative flex items-center justify-between text-xs text-white/80">
           <span>Protected workspace</span>
           <a href="/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-white">
             Back to site <ArrowUpRight className="h-3.5 w-3.5" />
@@ -95,6 +95,7 @@ async function AdminLoginContent() {
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-600/15 dark:text-brand-200">
               <LockKeyhole className="h-5 w-5" />
             </div>
+            <h1 className="sr-only lg:hidden">Infinity Tech admin</h1>
             <h2 className="mt-5 font-display text-2xl font-semibold">Welcome back</h2>
             <p className="mt-2 text-sm text-ink-500 dark:text-slate-400">
               Enter the admin password to receive a verification code by email.
@@ -102,7 +103,7 @@ async function AdminLoginContent() {
             <AdminLoginForm />
           </div>
 
-          <p className="mt-5 text-center text-[11px] text-ink-500 dark:text-slate-500">
+          <p className="mt-5 text-center text-[11px] text-ink-500 dark:text-slate-400">
             Only authorized users can manage site content.
           </p>
         </div>

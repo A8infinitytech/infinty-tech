@@ -17,7 +17,7 @@ export default async function Projects() {
   return (
     <>
       <section className="mx-auto min-h-[420px] max-w-6xl px-4 py-20 sm:px-6">
-        <SectionHeading eyebrow={content.projects.heading.eyebrow} title={content.projects.heading.title} />
+        <SectionHeading as="h1" eyebrow={content.projects.heading.eyebrow} title={content.projects.heading.title} />
         {projects.length === 0 ? (
           <div className="mt-12 rounded-2xl border border-dashed border-brand-200 bg-brand-50/40 p-14 text-center">
             {iconElement("FolderKanban", { className: "mx-auto h-10 w-10 text-brand-600", "aria-hidden": true })}

@@ -104,9 +104,12 @@ export default function Chatbot() {
   // States for Dynamic Data
   const [servicesList, setServicesList] = useState<ChatbotService[]>([]);
   const [settings, setSettings] = useState<ChatbotSettings | null>(null);
+  const dataLoadedRef = useRef(false);
 
-  // Page load hote hi dono API call karega (Inspector mein dikhega)
   useEffect(() => {
+    if (!open || dataLoadedRef.current) return;
+    dataLoadedRef.current = true;
+
     async function loadData() {
       try {
         const [servicesRes, settingsRes] = await Promise.all([
@@ -128,7 +131,7 @@ export default function Chatbot() {
       }
     }
     loadData();
-  }, []);
+  }, [open]);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   

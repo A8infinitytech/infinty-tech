@@ -27,7 +27,8 @@ export default function Logo({
         width={536}
         height={148}
         className={`${className} w-auto logo-light`}
-         loading="eager" 
+        sizes="(max-width: 768px) 145px, 175px"
+        loading="eager"
       />
       <Image
         src={logo.darkSrc}
@@ -35,7 +36,8 @@ export default function Logo({
         width={536}
         height={148}
         className={`${className} w-auto logo-dark`}
-         loading="eager" 
+        sizes="(max-width: 768px) 145px, 175px"
+        loading="lazy"
       />
     </>
   );

@@ -1,20 +1,28 @@
 // components/ScrollUtils.tsx
 "use client";
 // Scroll progress bar and back-to-top button.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSiteContent } from "@/lib/useSiteContent";
 import { iconElement } from "@/lib/data";
 export default function ScrollUtils() {
   const content = useSiteContent();
   const [p, setP] = useState(0);
+  const frame = useRef(0);
   useEffect(() => {
-    const f = () => {
+    const update = () => {
       const h = document.documentElement;
       setP(h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight));
     };
-    f();
+    const f = () => {
+      cancelAnimationFrame(frame.current);
+      frame.current = requestAnimationFrame(update);
+    };
+    update();
     window.addEventListener("scroll", f, { passive: true });
-    return () => window.removeEventListener("scroll", f);
+    return () => {
+      cancelAnimationFrame(frame.current);
+      window.removeEventListener("scroll", f);
+    };
   }, []);
   return (
     <>

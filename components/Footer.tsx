@@ -11,9 +11,10 @@ import Logo from "./Logo";
 
 
 export default function Footer() {
-  const [year, setYear] = useState<number | null>(null);
+  const [year, setYear] = useState("");
   useEffect(() => {
-    setYear(new Date().getFullYear());
+    const timer = setTimeout(() => setYear(String(new Date().getFullYear())), 0);
+    return () => clearTimeout(timer);
   }, []);
   const [subEmail, setSubEmail] = useState("");
   const [subStatus, setSubStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -58,7 +59,7 @@ export default function Footer() {
         
         {/* 2. Pages */}
         <nav aria-label="Footer" className="md:pl-4">
-          <h3 className="mb-4 text-sm font-semibold">{content.footer.headings.pages}</h3>
+          <h2 className="mb-4 text-sm font-semibold">{content.footer.headings.pages}</h2>
           <ul className="space-y-2 text-sm text-ink-500">
             {content.navigation.map((n) => (
               <li key={n.href}>
@@ -72,7 +73,7 @@ export default function Footer() {
         
         {/* 3. Contact */}
         <div className="md:pl-4">
-          <h3 className="mb-4 text-sm font-semibold">{content.footer.headings.contact}</h3>
+          <h2 className="mb-4 text-sm font-semibold">{content.footer.headings.contact}</h2>
           <a
             href={`mailto:${content.constants.email}`}
             className="inline-flex items-center gap-2 text-sm text-ink-500 hover:text-brand-600 transition-colors"
@@ -91,12 +92,12 @@ export default function Footer() {
 
         {/* 4. Newsletter */}
         <div>
-          <h3 className="mb-4 text-sm font-semibold">{content.footer.headings.newsletter}</h3>
+          <h2 className="mb-4 text-sm font-semibold">{content.footer.headings.newsletter}</h2>
           <p className="mb-3 text-sm text-ink-500">
             {content.footer.newsletterDescription}
           </p>
           {subStatus === "sent" ? (
-            <p className="text-sm font-medium text-green-600">
+            <p className="text-sm font-medium text-green-700">
               {content.footer.success}
             </p>
           ) : (
@@ -121,7 +122,7 @@ export default function Footer() {
                 )}
               </button>
               {subStatus === "error" && (
-                <p className="text-xs text-red-500">{subError || content.footer.error}</p>
+                <p className="text-xs text-red-600">{subError || content.footer.error}</p>
               )}
             </form>
           )}
@@ -129,7 +130,7 @@ export default function Footer() {
       </div>
       
       <div className="border-t border-surface-border py-5 text-center text-xs text-ink-500">
-        {content.footer.copyrightSymbol} {year ? `${year} ` : ""}{content.footer.copyrightText}
+        {content.footer.copyrightSymbol} {year} {content.footer.copyrightText}
       </div>
     </footer>
   );

@@ -13,7 +13,7 @@ export default function ToolsGrid() {
       {content.tools.map((t) => (
         <li key={t.name}>
           <Reveal>
-            <div className="group flex h-full flex-col items-center justify-center rounded-2xl border border-surface-border bg-white p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand-600 hover:shadow-lg hover:shadow-brand-100/50">
+            <div className="group flex h-full flex-col items-center justify-center rounded-2xl border border-surface-border bg-white p-5 text-center transition-transform duration-300 hover:-translate-y-1 hover:border-brand-600 hover:shadow-lg hover:shadow-brand-100/50">
               
               {/* Icon Box - Size thoda chota kiya hai taake 6 cards fit ho sakein */}
               <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-colors duration-300 group-hover:bg-brand-600 group-hover:text-white">

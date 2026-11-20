@@ -24,6 +24,7 @@ export default async function Services() {
     <>
       <section className="mx-auto min-h-[720px] max-w-6xl px-4 py-20 sm:px-6">
         <SectionHeading
+          as="h1"
           eyebrow={servicesPage.heading.eyebrow}
           title={servicesPage.heading.title}
           desc={servicesPage.heading.desc}

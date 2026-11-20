@@ -1,6 +1,6 @@
 // app/page.tsx
 // Home page: hero, services, why us, process, tools, projects teaser, testimonials, FAQ and CTA.
-import { Suspense } from "react"; 
+import { Suspense, cache } from "react";
 import Button from "@/components/Button";
 import HeroDashboard from "@/components/HeroDashboard";
 import SectionHeading from "@/components/SectionHeading";
@@ -14,6 +14,8 @@ import ServicesPreview from "@/components/ServicesPreview";
 import { iconElement } from "@/lib/data";
 import { getSiteContent } from "@/lib/site-content";
 import { getCmsServices } from "@/lib/cms/services";
+
+const loadServices = cache(getCmsServices);
 
 export default async function Home() {
   const content = await getSiteContent();
@@ -41,7 +43,9 @@ export default async function Home() {
             </div>
             <HeroAsk />
           </div>
-          <HeroDashboard />
+          <Suspense fallback={<DashboardFallback loadingLabel={content.dashboard.loadingLabel} rows={content.dashboard.skeletonRows} />}>
+            <HeroDashboardLoader />
+          </Suspense>
         </div>
       </section>
 
@@ -79,13 +83,13 @@ export default async function Home() {
         <SectionHeading eyebrow={content.home.sections.process.eyebrow} title={content.home.sections.process.title} />
         <ol className="mt-12 grid gap-6 md:grid-cols-4">
           {content.process.map((p, i) => (
-            <Reveal key={p.t}>
-              <li className="relative list-none rounded-2xl border border-surface-border p-6">
-                <span className="font-display text-4xl font-bold text-brand-200">{content.home.processNumberPrefix}{i + 1}</span>
+            <li key={p.t} className="relative list-none rounded-2xl border border-surface-border p-6">
+              <Reveal className="h-full">
+                <span className="process-number font-display text-4xl font-bold">{content.home.processNumberPrefix}{i + 1}</span>
                 <h3 className="mt-3 font-display text-lg font-semibold">{p.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-500">{p.d}</p>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ol>
       </section>
@@ -127,7 +131,41 @@ export default async function Home() {
   );
 }
 
+function DashboardFallback({ loadingLabel, rows }: { loadingLabel: string; rows: number[] }) {
+  return (
+    <div className="relative">
+      <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-tr from-brand-100 via-brand-50 to-white blur-2xl" />
+      <div className="relative flex h-[480px] flex-col overflow-hidden rounded-2xl border border-surface-border bg-white shadow-glow">
+        <div className="flex shrink-0 items-center gap-2 border-b border-surface-border bg-surface px-4 py-3">
+          <span className="h-2.5 w-2.5 rounded-full bg-ink-300/60" />
+          <span className="h-2.5 w-2.5 rounded-full bg-ink-300/60" />
+          <span className="h-2.5 w-2.5 rounded-full bg-ink-300/60" />
+          <span className="ml-3 text-xs font-medium text-ink-500">{loadingLabel}</span>
+        </div>
+        <div className="grid flex-1 gap-4 p-5 sm:grid-cols-5 min-h-0 animate-pulse">
+          <div className="sm:col-span-2 space-y-2">
+            <div className="h-4 w-20 bg-gray-200 rounded mb-4" />
+            {rows.map((row) => (
+              <div key={row} className="h-10 bg-gray-100 rounded-xl" />
+            ))}
+          </div>
+          <div className="sm:col-span-3 space-y-4">
+            <div className="h-32 bg-gray-100 rounded-xl" />
+            <div className="h-20 bg-gray-100 rounded-xl" />
+            <div className="h-20 bg-gray-100 rounded-xl" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function HeroDashboardLoader() {
+  const services = await loadServices();
+  return <HeroDashboard services={services} />;
+}
+
 async function ServicesDataWrapper() {
-  const servicesData = await getCmsServices();
-  return <ServicesPreview services={servicesData} />;
+  const services = await loadServices();
+  return <ServicesPreview services={services} />;
 }

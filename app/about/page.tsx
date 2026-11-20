@@ -24,6 +24,7 @@ export default async function About() {
       <section className="min-h-[360px] bg-gradient-to-b from-brand-50/60 to-white">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
           <SectionHeading
+            as="h1"
             eyebrow={about.intro.eyebrow}
             title={content.constants.slogan}
             desc={about.intro.desc}
@@ -60,7 +61,7 @@ export default async function About() {
         <ol className="mt-12 grid gap-6 md:grid-cols-4">
           {content.process.map((p, i) => (
             <li key={p.t} className="list-none rounded-2xl border border-surface-border p-6">
-              <span className="font-display text-4xl font-bold text-brand-200">{about.processNumberPrefix}{i + 1}</span>
+              <span className="process-number font-display text-4xl font-bold">{about.processNumberPrefix}{i + 1}</span>
               <h3 className="mt-3 font-display text-lg font-semibold">{p.t}</h3>
               <p className="mt-2 text-sm text-ink-500">{p.d}</p>
             </li>

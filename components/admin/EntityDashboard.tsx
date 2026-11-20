@@ -36,7 +36,7 @@ type Status = { kind: "ok" | "error"; message: string } | null;
 const panel =
   "rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5";
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-ink-500/60 focus:border-brand-600 focus:ring-4 focus:ring-brand-100/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:focus:bg-white/10";
+  "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-ink-500/70 focus:border-brand-600 focus:ring-4 focus:ring-brand-100/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:focus:bg-white/10";
 const primary =
   "inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60";
 const secondary =
@@ -506,9 +506,9 @@ export default function EntityDashboard() {
             <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
             <div className="relative flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/70">Content studio</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/85">Content studio</p>
                 <h1 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">{config?.label ?? "Entity"}</h1>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/75">
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">
                   Manage this content through one normalized API used by both the public site and this dashboard.
                 </p>
               </div>

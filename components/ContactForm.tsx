@@ -98,7 +98,7 @@ export default function ContactForm({ services }: { services: ServiceItem[] }) {
       </button>
 
       {status === "sent" && (
-        <p role="status" className="text-sm text-green-600">
+        <p role="status" className="text-sm text-green-700">
           {content.contactForm.sent}
         </p>
       )}

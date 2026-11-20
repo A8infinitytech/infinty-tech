@@ -37,6 +37,10 @@
   border-radius: 6px;
 }
 
+.process-number {
+  color: #4d52c9;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -154,6 +158,9 @@
 }
 .dark .text-brand-200 {
   color: #6e73ff;
+}
+.dark .process-number {
+  color: #a5a9ff;
 }
 .dark .border-brand-200 {
   border-color: #2b2f9e;

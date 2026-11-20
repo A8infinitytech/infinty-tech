@@ -18,7 +18,7 @@ export default function ServiceCard({
 }) {
   const content = useSiteContent();
   return (
-    <article className="group h-full rounded-2xl border border-surface-border bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-card">
+    <article className="group h-full rounded-2xl border border-surface-border bg-white p-7 transition-transform duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-card">
       <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600 transition-colors group-hover:bg-brand-600 group-hover:text-white">
         {iconElement(icon || content.serviceCard.fallbackIconName, { className: "h-6 w-6", "aria-hidden": true })}
       </span>
@@ -39,7 +39,7 @@ export default function ServiceCard({
       
       <Link
         href={`${content.serviceCard.contactBaseUrl}${encodeURIComponent(title)}`}
-        className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-all hover:gap-2"
+        className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:gap-2"
       >
         {content.serviceCard.quoteLabel} {iconElement("ArrowRight", { className: "h-4 w-4", "aria-hidden": true })}
       </Link>

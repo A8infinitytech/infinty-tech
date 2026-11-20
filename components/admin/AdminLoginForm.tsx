@@ -72,11 +72,11 @@ export default function AdminLoginForm() {
   if (stage === "verify") {
     return (
       <form onSubmit={submitCode} className="mt-8 space-y-5">
-        <div className="flex items-start gap-3 rounded-xl border border-brand-200 bg-brand-50 px-3 py-3 text-xs text-brand-900 dark:border-brand-500/20 dark:bg-brand-600/10 dark:text-brand-200">
+        <div className="flex items-start gap-3 rounded-xl border border-brand-200 bg-brand-50 px-3 py-3 text-xs text-brand-700 dark:border-brand-500/20 dark:bg-brand-600/10 dark:text-brand-200">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" />
           <div>
             <p className="font-semibold">Verification code sent to the admin email.</p>
-            <p className="mt-1 opacity-80">Device: <span className="font-semibold">{device}</span></p>
+            <p className="mt-1">Device: <span className="font-semibold">{device}</span></p>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ export default function AdminLoginForm() {
             required
             aria-invalid={Boolean(error)}
             placeholder="000000"
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[0.4em] text-ink outline-none transition placeholder:tracking-normal placeholder:text-ink-500/40 focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:focus:bg-white/10"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-center text-lg font-semibold tracking-[0.4em] text-ink outline-none transition placeholder:tracking-normal placeholder:text-ink-500/70 focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:focus:bg-white/10"
           />
         </label>
 
@@ -146,7 +146,7 @@ export default function AdminLoginForm() {
             required
             aria-invalid={Boolean(error)}
             placeholder="Enter password"
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-ink outline-none transition placeholder:text-ink-500/50 focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-white/10"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 pr-12 text-sm text-ink outline-none transition placeholder:text-ink-500/70 focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100/70 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-white/10"
           />
           <button
             type="button"

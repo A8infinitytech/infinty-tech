@@ -13,41 +13,13 @@ type ServiceItem = {
   icon: string;
 };
 
-function isServiceItem(row: unknown): row is ServiceItem {
-  if (typeof row !== "object" || row === null) return false;
-  const value = row as { title?: unknown; icon?: unknown };
-  return typeof value.title === "string" && typeof value.icon === "string";
-}
-
-export default function HeroDashboard() {
+export default function HeroDashboard({ services }: { services: ServiceItem[] }) {
   const content = useSiteContent();
-  // API se data laane ke liye states
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [loading, setLoading] = useState(true);
   
   const [i, setI] = useState(0);
   const [auto, setAuto] = useState(true);
   const [chartKey, setChartKey] = useState(0);
   const [workflowStep, setWorkflowStep] = useState(0);
-
-  // API Call
-  useEffect(() => {
-    async function fetchServices() {
-      try {
-        const res = await fetch("/api/cms/services");
-        if (res.ok) {
-          const payload = await res.json();
-          const rows = Array.isArray(payload) ? payload : Array.isArray(payload.data) ? payload.data : [];
-          setServices(rows.filter(isServiceItem));
-        }
-      } catch (err) {
-        console.error("Failed to load services in HeroDashboard", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchServices();
-  }, []);
 
   // Get Workflow Steps based on title
   const getWorkflowSteps = (title: string) => {
@@ -96,7 +68,7 @@ export default function HeroDashboard() {
   };
 
   // LOADING SKELETON (Agar data abhi nahi aaya hai)
-  if (loading || !s) {
+  if (!s) {
     return (
       <div className="relative">
         <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-tr from-brand-100 via-brand-50 to-white blur-2xl" />
@@ -161,7 +133,7 @@ export default function HeroDashboard() {
                   role="tab"
                   aria-selected={k === i}
                   onClick={() => handleTabClick(k)}
-                  className={`group flex shrink-0 w-full items-center gap-3 rounded-xl border p-2.5 text-left transition-all duration-300 ${
+                  className={`group flex shrink-0 w-full items-center gap-3 rounded-xl border p-2.5 text-left transition-colors duration-300 ${
                     k === i 
                       ? "border-brand-200 bg-brand-50/60 shadow-sm" 
                       : "border-surface-border hover:border-brand-200 hover:bg-brand-50/30"
@@ -189,17 +161,17 @@ export default function HeroDashboard() {
             {/* Main Service Card */}
             <div
               key={i} 
-              className="reveal in shrink-0 rounded-xl border border-brand-200 bg-brand-50/50 p-3.5 transition-all"
+              className="reveal in shrink-0 rounded-xl border border-brand-200 bg-brand-50/50 p-3.5"
             >
               <div className="flex items-start justify-between">
                 {iconElement(s.icon || content.iconMeta.fallbackName, { className: "h-5 w-5 text-brand-600", "aria-hidden": true })}
                 {auto && (
-                  <span className="flex items-center gap-1.5 text-[10px] font-semibold text-brand-600 bg-brand-100/50 px-2 py-1 rounded-full">
+                  <span className="flex items-center gap-1.5 text-[10px] font-semibold text-brand-700 bg-brand-100 dark:bg-brand-600/20 dark:text-white px-2 py-1 rounded-full">
                     <span className="h-1.5 w-1.5 rounded-full bg-brand-600 animate-pulse" /> {content.dashboard.autoLabel}
                   </span>
                 )}
               </div>
-              <h3 className="mt-1.5 font-display text-sm font-semibold text-ink-900">{s.title}</h3>
+              <h2 className="mt-1.5 font-display text-sm font-semibold text-ink-900">{s.title}</h2>
               {/* Database mein description hai, desc nahi */}
               <p className="mt-1 text-xs leading-relaxed text-ink-500 line-clamp-2">{s.description}</p>
               <Link
@@ -217,7 +189,7 @@ export default function HeroDashboard() {
                   {iconElement("Sparkles", { className: "h-3 w-3 text-brand-600", "aria-hidden": true })}
                   {s.title} {content.dashboard.performanceLabel}
                 </p>
-                <span className="flex items-center gap-1 text-[9px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full border border-green-200">
+                <span className="flex items-center gap-1 text-[9px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full border border-green-200">
                   {iconElement("Activity", { className: "h-2.5 w-2.5", "aria-hidden": true })} {content.dashboard.liveLabel}
                 </span>
               </div>
@@ -254,7 +226,7 @@ export default function HeroDashboard() {
                   {iconElement("Workflow", { className: "h-3 w-3 text-brand-600", "aria-hidden": true })}
                   {content.dashboard.processLabel}
                 </p>
-                <span className={`text-[9px] font-bold tracking-wider transition-colors ${workflowStep === 3 ? "text-green-600" : "text-brand-600 animate-pulse"}`}>
+                <span className={`text-[9px] font-bold tracking-wider transition-colors ${workflowStep === 3 ? "text-green-700" : "text-brand-600 animate-pulse"}`}>
                   {workflowStep === 3 ? content.dashboard.completedLabel : content.dashboard.inProgressLabel}
                 </span>
               </div>
@@ -264,8 +236,8 @@ export default function HeroDashboard() {
                 <div className="absolute left-4 right-4 top-1/2 -z-10 h-[2px] -translate-y-1/2 bg-brand-100 rounded-full">
                   {/* Animated Progress Line */}
                   <div 
-                    className="h-full bg-brand-600 rounded-full transition-all duration-500 ease-in-out"
-                    style={{ width: `${(Math.min(workflowStep, 2) / 2) * 100}%` }}
+                    className="h-full w-full origin-left rounded-full bg-brand-600 transition-transform duration-500 ease-in-out"
+                    style={{ transform: `scaleX(${Math.min(workflowStep, 2) / 2})` }}
                   />
                 </div>
 
@@ -276,17 +248,17 @@ export default function HeroDashboard() {
                   return (
                     <div key={step} className="flex flex-col items-center gap-1.5">
                       <div
-                        className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold transition-all duration-500 ${
+                        className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold transition-transform duration-500 ${
                           isActive 
                             ? "bg-brand-600 text-white ring-4 ring-brand-100 scale-110" 
                             : isDone 
                               ? "bg-brand-600 text-white" 
-                              : "bg-white border-2 border-brand-200 text-brand-300"
+                              : "bg-white border-2 border-brand-200 text-ink-500"
                         }`}
                       >
                         {isDone || isActive ? iconElement("Check", { className: "h-3.5 w-3.5", "aria-hidden": true }) : k + 1}
                       </div>
-                      <span className={`text-[9px] font-semibold transition-colors duration-300 ${isActive || isDone ? "text-brand-700" : "text-ink-400"}`}>
+                      <span className={`text-[9px] font-semibold transition-colors duration-300 ${isActive || isDone ? "text-brand-700" : "text-ink-500"}`}>
                         {step}
                       </span>
                     </div>

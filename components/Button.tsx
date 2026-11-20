@@ -16,7 +16,7 @@ export default function Button({
   className?: string;
 }) {
   const base =
-    "group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200";
+    "group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-transform duration-200";
   const v =
     variant === "primary"
       ? "bg-brand-600 text-white shadow-glow hover:bg-brand-700 hover:-translate-y-0.5"
