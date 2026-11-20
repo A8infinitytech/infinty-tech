@@ -7,7 +7,7 @@ Repository: https://github.com/A8infinitytech/infinty-tech.git
 ## Features
 
 - Public pages: `/`, `/about`, `/services`, `/projects`, `/contact`
-- CMS admin: `/admin` and `/admin/login`
+- CMS admin: `/admin` and `/admin/login`, protected by password plus email verification code
 - 30 normalized CMS entities with one shared CRUD API per entity
 - Server-rendered site content with cached Supabase reads
 - Chatbot powered by Groq
@@ -54,7 +54,7 @@ Open:
 | `BREVO_API_KEY` | Email | Brevo API key for contact and newsletter emails |
 | `BREVO_SENDER_EMAIL` | Email | Verified Brevo sender email address |
 | `BREVO_SENDER_NAME` | No | Defaults to `Infinity Tech` |
-| `CONTACT_EMAIL` | Email | Destination inbox for contact and subscribe forms |
+| `CONTACT_EMAIL` | Email | Destination inbox for contact/subscribe forms and admin login codes |
 
 Do not put a `sb_publishable_...` key in `SUPABASE_SERVICE_ROLE_KEY`. Server-side admin writes require the secret key.
 
@@ -91,9 +91,15 @@ If the Supabase CLI is available, you can also apply the migration through your 
 2. Verify the sender email under **Senders & Domains**.
 3. Create an API key with email/SMTP sending access.
 4. Set `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`, and optionally `BREVO_SENDER_NAME` in `.env.local` or Vercel.
-5. Set `CONTACT_EMAIL` to the inbox that should receive enquiries and newsletter sign-ups.
+5. Set `CONTACT_EMAIL` to the inbox that should receive enquiries, newsletter sign-ups, and admin login codes.
 
 The helper in `lib/brevo.ts` calls `https://api.brevo.com/v3/smtp/email`. Contact and subscribe routes send two emails each: one to the admin inbox and one auto-reply to the visitor.
+
+## Admin login verification
+
+Admin sign-in is a two-step flow. After the correct `ADMIN_PASSWORD` is submitted, `/api/admin/login` emails a six-digit code to `CONTACT_EMAIL`. The email includes the device name detected from the browser user-agent. The admin session cookie is only created after `/api/admin/verify` accepts that code.
+
+The verification challenge expires after 5 minutes and allows 5 attempts. The code is stored only as a SHA-256 hash inside a signed httpOnly cookie; the plain code is never persisted. If no email arrives, check Brevo delivery for the `Admin login verification code` subject.
 
 ## Scripts
 
@@ -155,6 +161,7 @@ Errors use:
 ### Actions
 
 - `POST /api/admin/login`
+- `POST /api/admin/verify`
 - `POST /api/admin/logout`
 - `POST /api/chat`
 - `POST /api/contact`
@@ -179,8 +186,9 @@ infinity-officall-site/
 ├── app/                               # Next.js routes and pages
 │   ├── api/                           # server endpoints
 │   │   ├── admin/
-│   │   │   ├── login/route.ts         # password check + signed cookie
-│   │   │   └── logout/route.ts        # clears admin cookie
+│   │   │   ├── login/route.ts         # password check + verification email
+│   │   │   ├── verify/route.ts        # code check + signed admin cookie
+│   │   │   └── logout/route.ts        # clears admin cookies
 │   │   ├── chat/route.ts              # Groq chatbot endpoint
 │   │   ├── contact/route.ts           # Brevo contact form endpoint
 │   │   ├── subscribe/route.ts         # Brevo newsletter endpoint
@@ -266,7 +274,9 @@ infinity-officall-site/
 │   │   ├── services.ts                # typed services loader
 │   │   └── view.ts                    # merges normalized CMS data into SiteContent
 │   ├── admin-auth.ts                  # ADMIN_PASSWORD + HMAC session cookie
+│   ├── admin-challenge.ts             # signed login code challenge + attempts
 │   ├── brevo.ts                       # Brevo SMTP API email helper
+│   ├── device.ts                      # user-agent device-name parser
 │   ├── data.ts                        # SiteContent type + local icon helpers
 │   ├── settings.ts                    # typed site settings loader
 │   ├── services.ts                    # services helper for pages/API

@@ -15,11 +15,13 @@ type ServiceItem = { id?: string | number; title: string };
 export default function ContactForm({ services }: { services: ServiceItem[] }) {
   const content = useSiteContent();
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [formError, setFormError] = useState("");
   const q = useSearchParams().get("service");
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
+    setFormError("");
 
     const d = new FormData(e.currentTarget);
     const payload = {
@@ -36,10 +38,12 @@ export default function ContactForm({ services }: { services: ServiceItem[] }) {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Failed");
+      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(body.error ?? "Email could not be sent");
       setStatus("sent");
       (e.target as HTMLFormElement).reset();
-    } catch {
+    } catch (cause) {
+      setFormError(cause instanceof Error ? cause.message : "Email could not be sent");
       setStatus("error");
     }
   }
@@ -100,7 +104,7 @@ export default function ContactForm({ services }: { services: ServiceItem[] }) {
       )}
       {status === "error" && (
         <p role="alert" className="text-sm text-red-600">
-          {content.contactForm.error}
+          {formError || content.contactForm.error}
         </p>
       )}
     </form>

@@ -1,6 +1,6 @@
 // app/api/subscribe/route.ts
 import { NextResponse } from "next/server";
-import { sendBrevoEmail } from "@/lib/brevo";
+import { brevoErrorMessage, sendBrevoEmail } from "@/lib/brevo";
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const adminEmail = process.env.CONTACT_EMAIL;
     if (!adminEmail) {
       console.error("CONTACT_EMAIL is missing.");
-      return NextResponse.json({ error: "Email is not configured" }, { status: 500 });
+      return NextResponse.json({ error: "Email service is not configured" }, { status: 500 });
     }
 
     try {
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       });
     } catch (err) {
       console.error("Admin email failed:", err);
-      return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
+      return NextResponse.json({ error: brevoErrorMessage(err) }, { status: 500 });
     }
 
     try {
@@ -86,6 +86,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: brevoErrorMessage(err) }, { status: 500 });
   }
 }

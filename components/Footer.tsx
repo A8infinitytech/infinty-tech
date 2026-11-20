@@ -17,23 +17,27 @@ export default function Footer() {
   }, []);
   const [subEmail, setSubEmail] = useState("");
   const [subStatus, setSubStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [subError, setSubError] = useState("");
   const content = useSiteContent();
 
   async function handleSubscribe(e: React.FormEvent) {
     e.preventDefault();
     if (!subEmail) return;
-    
+
     setSubStatus("sending");
+    setSubError("");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: subEmail }),
       });
-      if (!res.ok) throw new Error("Failed");
+      const payload = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(payload.error ?? "Email could not be sent");
       setSubStatus("sent");
       setSubEmail("");
-    } catch {
+    } catch (cause) {
+      setSubError(cause instanceof Error ? cause.message : "Email could not be sent");
       setSubStatus("error");
     }
   }
@@ -117,7 +121,7 @@ export default function Footer() {
                 )}
               </button>
               {subStatus === "error" && (
-                <p className="text-xs text-red-500">{content.footer.error}</p>
+                <p className="text-xs text-red-500">{subError || content.footer.error}</p>
               )}
             </form>
           )}

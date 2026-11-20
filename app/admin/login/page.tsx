@@ -97,7 +97,7 @@ async function AdminLoginContent() {
             </div>
             <h2 className="mt-5 font-display text-2xl font-semibold">Welcome back</h2>
             <p className="mt-2 text-sm text-ink-500 dark:text-slate-400">
-              Enter the admin password to open the dashboard.
+              Enter the admin password to receive a verification code by email.
             </p>
             <AdminLoginForm />
           </div>
