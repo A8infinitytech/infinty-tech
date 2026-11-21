@@ -306,6 +306,7 @@ export const entityConfigs: readonly EntityConfig[] = [
       field("description", "Description", "textarea"),
       field("image_url", "Cover image", "image"),
       field("link", "Project link", "url"),
+      field("tools", "Tools", "textarea"),
       field("sort_order", "Order", "number"),
       field("published", "Published", "boolean"),
     ],

@@ -11,11 +11,14 @@ import ToolsGrid from "@/components/ToolsGrid";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
 import ServicesPreview from "@/components/ServicesPreview";
+import ProjectCard from "@/components/ProjectCard";
 import { iconElement } from "@/lib/data";
 import { getSiteContent } from "@/lib/site-content";
 import { getCmsServices } from "@/lib/cms/services";
+import { getCmsProjects } from "@/lib/cms/projects";
 
 const loadServices = cache(getCmsServices);
+const loadProjects = cache(getCmsProjects);
 
 export default async function Home() {
   const content = await getSiteContent();
@@ -108,7 +111,10 @@ export default async function Home() {
           desc={content.home.sections.projects.desc}
           center
         />
-        <div className="mt-8 text-center">
+        <Suspense fallback={<ProjectCardsFallback />}>
+          <HomeProjects emptyDescription={content.projects.emptyState.description} />
+        </Suspense>
+        <div className="mt-10 text-center">
           <Button href="/projects" variant="secondary">
             {content.home.sections.projects.button}
           </Button>
@@ -168,4 +174,28 @@ async function HeroDashboardLoader() {
 async function ServicesDataWrapper() {
   const services = await loadServices();
   return <ServicesPreview services={services} />;
+}
+
+function ProjectCardsFallback() {
+  return (
+    <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {[0, 1, 2].map((item) => (
+        <div key={item} className="h-80 animate-pulse rounded-2xl border border-surface-border bg-white/60" />
+      ))}
+    </div>
+  );
+}
+
+async function HomeProjects({ emptyDescription }: { emptyDescription: string }) {
+  const projects = await loadProjects();
+  if (projects.length === 0) {
+    return <p className="mt-12 text-center text-ink-500">{emptyDescription}</p>;
+  }
+  return (
+    <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {projects.slice(0, 3).map((project) => (
+        <ProjectCard key={project.id || project.title} project={project} />
+      ))}
+    </div>
+  );
 }

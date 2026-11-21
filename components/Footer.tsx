@@ -9,6 +9,13 @@ import { useSiteContent } from "@/lib/useSiteContent";
 import { iconElement } from "@/lib/data";
 import Logo from "./Logo";
 
+const legalLinks = [
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms-conditions", label: "Terms & Conditions" },
+  { href: "/cookie-policy", label: "Cookie Policy" },
+  { href: "/disclaimer", label: "Disclaimer" },
+  { href: "/refund-cancellation-policy", label: "Refund & Cancellation Policy" },
+] as const;
 
 export default function Footer() {
   const [year, setYear] = useState("");
@@ -45,9 +52,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-surface-border bg-surface">
-      {/* Yahan gap-10 ki jagah gap-8 kiya hai taake spacing tight aur barabar lage */}
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-4">
-        
         {/* 1. Logo & Socials */}
         <div className="md:col-span-1">
           <Logo className="h-12" />
@@ -56,7 +61,7 @@ export default function Footer() {
             <SocialLinks />
           </div>
         </div>
-        
+
         {/* 2. Pages */}
         <nav aria-label="Footer" className="md:pl-4">
           <h2 className="mb-4 text-sm font-semibold">{content.footer.headings.pages}</h2>
@@ -70,7 +75,7 @@ export default function Footer() {
             ))}
           </ul>
         </nav>
-        
+
         {/* 3. Contact */}
         <div className="md:pl-4">
           <h2 className="mb-4 text-sm font-semibold">{content.footer.headings.contact}</h2>
@@ -128,9 +133,25 @@ export default function Footer() {
           )}
         </div>
       </div>
-      
+
+      {/* Bottom bar: legal links upar, copyright/date neeche */}
       <div className="border-t border-surface-border py-5 text-center text-xs text-ink-500">
-        {content.footer.copyrightSymbol} {year} {content.footer.copyrightText}
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <nav aria-label="Legal" className="flex flex-wrap justify-center gap-x-4 gap-y-2">
+            {legalLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition-colors hover:text-brand-600"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <p className="mt-3">
+            {content.footer.copyrightSymbol} {year} {content.footer.copyrightText}
+          </p>
+        </div>
       </div>
     </footer>
   );

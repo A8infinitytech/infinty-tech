@@ -807,3 +807,9 @@ create index if not exists idx_testimonials_order on public.testimonials (sort_o
 create index if not exists idx_faqs_order on public.faqs (sort_order);
 create index if not exists idx_social_links_order on public.social_links (sort_order);
 create index if not exists idx_dashboard_steps_scope_order on public.dashboard_steps (scope, sort_order);
+
+
+alter table public.projects
+  add column if not exists tools text not null default '';
+
+notify pgrst, 'reload schema';
